@@ -103,3 +103,22 @@ def cargar_y_limpiar_datos(spark, ruta_archivo="eventos_streaming.jsonl"):
     print("="*70 + "\n")
 
     return df_limpio
+
+# ==============================================================================
+# PARA EJECUCIÓN PRINCIPAL (Para correr spark_prep.py directamente)
+# ==============================================================================
+if __name__ == "__main__":
+    # 1. Iniciamos la sesión de Spark
+    spark_session = iniciar_spark()
+    
+    try:
+        # 2. Ejecutamos el pipeline de carga, tipado y limpieza
+        df_preparado = cargar_y_limpiar_datos(spark_session, "eventos_streaming.jsonl")
+        
+        # 3. Mostramos una vista previa del DataFrame limpio final
+        print("--- Muestra de datos limpios listos para Análisis Exploratorio ---")
+        df_preparado.show(5, truncate=False)
+        
+    finally:
+        # 4. Cerramos ordenadamente la sesión de Spark para liberar memoria RAM
+        spark_session.stop()
