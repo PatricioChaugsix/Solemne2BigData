@@ -90,3 +90,16 @@ def cargar_y_limpiar_datos(spark, ruta_archivo="eventos_streaming.jsonl"):
     df_limpio = df_tipado.filter(
         col("minutos_reproducidos").isNotNull() & (col("minutos_reproducidos") > 0)
     )
+
+    # --------------------------------------------------------------------------
+    # tarea 5: Conteo DESPUÉS de aplicar el filtro y comparación
+    # --------------------------------------------------------------------------
+    conteo_despues = df_limpio.count()
+    diferencia = conteo_antes - conteo_despues
+    porcentaje_eliminado = (diferencia / conteo_antes * 100) if conteo_antes > 0 else 0
+
+    print(f"Total de registros DESPUÉS de limpieza  : {conteo_despues}")
+    print(f"Registros descartados                   : {diferencia} ({porcentaje_eliminado:.2f}%)")
+    print("="*70 + "\n")
+
+    return df_limpio
