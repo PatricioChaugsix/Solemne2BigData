@@ -34,3 +34,13 @@ def cargar_y_limpiar_datos(spark, ruta_archivo="eventos_streaming.jsonl"):
 
     # lee el archivo .jsonl usando el lector nativo
     df_crudo = spark.read.json(ruta_archivo)
+
+    # --------------------------------------------------------------------------
+    # tarea 1: Mostrar el esquema  y verificar tipos de datos
+    # --------------------------------------------------------------------------
+    print("\n--- Esquema Original Inferido por PySpark ---")
+    df_crudo.printSchema()
+
+    # se visualiza una pequeña muestra de 5 filas para verificar visualmente los datos
+    print("--- Muestra de los primeros 5 registros crudos ---")
+    df_crudo.show(5, truncate=False) 
