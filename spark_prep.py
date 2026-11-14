@@ -80,3 +80,13 @@ def cargar_y_limpiar_datos(spark, ruta_archivo="eventos_streaming.jsonl"):
 
     print(f"Total de registros ANTES de la limpieza : {conteo_antes}")
     print(f"Registros anómalos detectados (Null/<=0): {registros_anomalos}")
+
+    # --------------------------------------------------------------------------
+    # REQUISITO 4: Filtrar/Eliminar registros con minutos_reproducidos nulo o 0
+    # --------------------------------------------------------------------------
+    # se eliminan los registros con minutos_reproducidos NULL o <= 0 porque representan
+    # fallas del reproductor o clics accidentales sin reproducción efectiva.
+    # Mantenerlos afectaria el promedio real de consumo y la desviación estándar.
+    df_limpio = df_tipado.filter(
+        col("minutos_reproducidos").isNotNull() & (col("minutos_reproducidos") > 0)
+    )
