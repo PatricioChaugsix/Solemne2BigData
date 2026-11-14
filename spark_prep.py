@@ -1,3 +1,7 @@
+from pyspark.sql import SparkSession  # importa la clase SparkSession para crear la sesión de Spark
+import os # importa el módulo os para verificar la existencia de archivos
+from pyspark.sql.functions import * # importa funciones de PySpark para manipulación de columnas y datos
+
 # ==============================================================================
 # DESCRIPCIÓN: Este archivo lo que hace es leer eventos_streaming.jsonl, valida 
 #              el esquema, convierte tipos, trata anomalías (nulos o ceros)
