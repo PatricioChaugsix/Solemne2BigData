@@ -44,3 +44,39 @@ def cargar_y_limpiar_datos(spark, ruta_archivo="eventos_streaming.jsonl"):
     # se visualiza una pequeña muestra de 5 filas para verificar visualmente los datos
     print("--- Muestra de los primeros 5 registros crudos ---")
     df_crudo.show(5, truncate=False) 
+
+    # --------------------------------------------------------------------------
+    # tarea 2: Convertir timestamp (string) a TimestampType
+    # --------------------------------------------------------------------------
+    print("\n" + "="*70)
+    print(" 2. CONVERSIÓN DE TIPOS DE DATOS (STRING -> TIMESTAMP)")
+    print("="*70)
+
+    # Convertimos la columna 'timestamp' desd e String a formato fecha-hora real (TimestampType)
+    # Nota: to_timestamp soporta automáticamente el formato estándar ISO-8601 (YYYY-MM-DD HH:MM:SS)
+    df_tipado = df_crudo.withColumn(
+        "timestamp", 
+        to_timestamp(col("timestamp"))
+    )
+
+    # Verificamos en el esquema que 'timestamp' ahora figura como 'timestamp' (TimestampType)
+    print("\n--- Esquema Actualizado tras conversión de Timestamp ---")
+    df_tipado.printSchema()
+
+    # --------------------------------------------------------------------------
+    # tarea 3: Conteo ANTES de limpiar y diagnóstico de anomalías
+    # --------------------------------------------------------------------------
+    print("\n" + "="*70)
+    print(" 3. TRATAMIENTO DE CALIDAD DE DATOS (ANOMALÍAS EN MINUTOS)")
+    print("="*70)
+
+    # cuenta el total de registros originales recibidos desde kKafka
+    conteo_antes = df_tipado.count()
+
+    # calcula cuántos registros tienen minutos_reproducidos nulo o igual a 0
+    registros_anomalos = df_tipado.filter(
+        col("minutos_reproducidos").isNull() | (col("minutos_reproducidos") <= 0)
+    ).count()
+
+    print(f"Total de registros ANTES de la limpieza : {conteo_antes}")
+    print(f"Registros anómalos detectados (Null/<=0): {registros_anomalos}")
