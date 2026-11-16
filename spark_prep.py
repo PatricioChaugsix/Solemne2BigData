@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession  # importa la clase SparkSession para crear la sesión de Spark
 import os # importa el módulo os para verificar la existencia de archivos
+import sys # para leer el nombre del archivo desde la terminal
 from pyspark.sql.functions import * # importa funciones de PySpark para manipulación de columnas y datos
 
 # ==============================================================================
@@ -112,12 +113,15 @@ def cargar_y_limpiar_datos(spark, ruta_archivo="eventos_streaming.jsonl"):
 # PARA EJECUCIÓN PRINCIPAL (Para correr spark_prep.py directamente)
 # ==============================================================================
 if __name__ == "__main__":
+    # se puede indicar otro archivo, ej: python spark_prep.py eventos_demo.jsonl
+    ruta = sys.argv[1] if len(sys.argv) > 1 else "eventos_streaming.jsonl"
+
     # 1. Iniciamos la sesión de Spark
     spark_session = iniciar_spark()
-    
+
     try:
         # 2. Ejecutamos el pipeline de carga, tipado y limpieza
-        df_preparado = cargar_y_limpiar_datos(spark_session, "eventos_streaming.jsonl")
+        df_preparado = cargar_y_limpiar_datos(spark_session, ruta)
         
         # 3. Mostramos una vista previa del DataFrame limpio final
         print("--- Muestra de datos limpios listos para Análisis Exploratorio ---")

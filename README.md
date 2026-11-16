@@ -108,6 +108,21 @@ ORDEN PARA EJECUTAR EL PROYECTO
     Los gráficos se guardan en la carpeta principal del proyecto.
 
 
+    DEMO (MUESTRA DE 150 EVENTOS)
+    La demo se guarda en un archivo aparte (eventos_demo.jsonl) para no modificar el archivo completo. Antes de grabar se reinicia Kafka para que el tópico parta vacío:
+    • docker compose down
+    • docker compose up -d
+
+    Luego, en el mismo orden de siempre:
+    • python consumidor.py eventos_demo.jsonl  (terminal 1, detener con Ctrl + C al terminar)
+    • python productor.py 150  (terminal 2)
+    • python spark_prep.py eventos_demo.jsonl
+    • python spark_eda.py eventos_demo.jsonl
+    • python visualizaciones.py eventos_demo.jsonl  (genera demo_grafico_*.png)
+
+    Importante: no ejecutar "python consumidor.py" sin nombre de archivo durante la demo, porque sobrescribe eventos_streaming.jsonl.
+
+
     RESULTADOS ESPERADOS
     El procesamiento permite identificar patrones de consumo, comparar los tiempos de reproducción entre categorías y observar aquellos horarios con mayor actividad. También nos permite evaluar la calidad de los datos mediante la detección y eliminación de registros anómalos.
 

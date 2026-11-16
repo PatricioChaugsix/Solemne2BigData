@@ -1,5 +1,6 @@
 from pyspark.sql.functions import avg, col, count , hour , max, min, stddev #Importacion de funciones matematicas de Spark 
 from spark_prep import cargar_y_limpiar_datos, iniciar_spark #Importacion de archivo de Kamila
+import sys
 
 def ejecutar_eda(ruta_archivo = "eventos_streaming.jsonl"):
     spark = iniciar_spark() 
@@ -39,5 +40,6 @@ def ejecutar_eda(ruta_archivo = "eventos_streaming.jsonl"):
     return spark, pdf_minutos, pdf_categorias, pdf_temporal
     
 if __name__ == "__main__": #hace que se ejecue solo en la terminal
-    spark,pdf_minutos, pdf_categorias, pdf_temporal = ejecutar_eda()
+    ruta = sys.argv[1] if len(sys.argv) > 1 else "eventos_streaming.jsonl" #permite usar el archivo de la demo
+    spark,pdf_minutos, pdf_categorias, pdf_temporal = ejecutar_eda(ruta)
     spark.stop() #se detiene el proceso limpiando la RAM

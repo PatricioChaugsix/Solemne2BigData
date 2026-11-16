@@ -1,8 +1,12 @@
+import sys
 import matplotlib.pyplot as plt
 from spark_eda import ejecutar_eda
 
-def generar_graficos():
-    spark, pdf_minutos, pdf_categorias, pdf_temporal = ejecutar_eda()
+def generar_graficos(ruta_archivo="eventos_streaming.jsonl"):
+    spark, pdf_minutos, pdf_categorias, pdf_temporal = ejecutar_eda(ruta_archivo)
+
+    # si no es el archivo completo, los graficos se guardan con "demo_" para no pisar los oficiales
+    prefijo = "" if ruta_archivo == "eventos_streaming.jsonl" else "demo_"
 
     try:
         # Gráfico 1: Distribución de minutos reproducidos
@@ -18,7 +22,7 @@ def generar_graficos():
         plt.xlabel("Minutos reproducidos")
         plt.ylabel("Frecuencia de reproducciones")
         plt.tight_layout()
-        plt.savefig("grafico_descriptivo.png")
+        plt.savefig(prefijo + "grafico_descriptivo.png")
         plt.close()
 
         print("\nInterpretación gráfico 1:")
@@ -39,7 +43,7 @@ def generar_graficos():
         plt.xlabel("Tipo de contenido")
         plt.ylabel("Promedio de minutos reproducidos")
         plt.tight_layout()
-        plt.savefig("grafico_categorias.png")
+        plt.savefig(prefijo + "grafico_categorias.png")
         plt.close()
 
         categoria_mayor = pdf_categorias.loc[
@@ -69,7 +73,7 @@ def generar_graficos():
         plt.xticks(range(24))
         plt.grid(True, alpha=0.3)
         plt.tight_layout()
-        plt.savefig("grafico_temporal.png")
+        plt.savefig(prefijo + "grafico_temporal.png")
         plt.close()
 
         hora_mayor = pdf_temporal.loc[
@@ -85,12 +89,13 @@ def generar_graficos():
 
         print("\nGráficos generados correctamente!!")
         print("Archivos creados:")
-        print("grafico_descriptivo.png")
-        print("grafico_categorias.png")
-        print("grafico_temporal.png")
+        print(prefijo + "grafico_descriptivo.png")
+        print(prefijo + "grafico_categorias.png")
+        print(prefijo + "grafico_temporal.png")
 
     finally:
         spark.stop()
 
 if __name__ == "__main__":
-    generar_graficos()
+    ruta = sys.argv[1] if len(sys.argv) > 1 else "eventos_streaming.jsonl"
+    generar_graficos(ruta)

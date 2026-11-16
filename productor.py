@@ -107,9 +107,12 @@ def leer_cantidad():
     except ValueError:
         print(f"Cantidad inválida '{sys.argv[1]}'. Se usarán {CANTIDAD_MINIMA} eventos.")
         return CANTIDAD_MINIMA
-    if cantidad < CANTIDAD_MINIMA:
-        print(f"La cantidad mínima de eventos es {CANTIDAD_MINIMA}.")
+    if cantidad <= 0:
+        print("La cantidad de eventos debe ser mayor a 0.")
         sys.exit(1)
+    # menos de 5000 se usa solo para la demo (100 a 200 eventos)
+    if cantidad < CANTIDAD_MINIMA:
+        print(f"Modo demo: se enviarán {cantidad} eventos (el dataset completo usa {CANTIDAD_MINIMA}).")
     return cantidad
 
 
